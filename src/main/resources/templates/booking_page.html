@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <style>
+        body {
+            background: linear-gradient(270deg, #e3f2fd, #bbdefb, #90caf9, #42a5f5, #0d47a1);
+            background-size: 150% 150%;
+            animation: gradientAnimation 10s ease infinite;
+            color: #0d47a1; /* Dark blue text */
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .navbar {
+            background-color: #1565c0; /* Darker blue for navbar */
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important; /* White text for navbar items */
+        }
+        .navbar-brand:hover, .nav-link:hover {
+            color: #aeea00 !important; /* Yellow on hover for navbar items */
+        }
+        .btn-primary {
+            background-color: #0d47a1; /* Dark blue for primary button */
+            border-color: #0d47a1;
+        }
+        .btn-primary:hover {
+            background-color: #1e88e5; /* Darker blue on hover for primary button */
+            border-color: #1e88e5;
+        }
+        .btn-secondary {
+            background-color: #42a5f5; /* Complementary blue for secondary button */
+            border-color: #42a5f5;
+        }
+        .btn-secondary:hover {
+            background-color: #64b5f6; /* Lighter blue on hover for secondary button */
+            border-color: #64b5f6;
+        }
+        .container {
+            text-align: center; /* Center the container content */
+        }
+        .logo {
+            height: 50px;
+            margin-right: 10px;
+        }
+        .form-group label {
+            color: #0d47a1; /* Dark blue labels for form */
+        }
+        .form-control {
+            border-color: #0d47a1; /* Dark blue border for form controls */
+        }
+        .form-control:focus {
+            border-color: #1e88e5; /* Darker blue border on focus */
+            box-shadow: 0 0 0 0.2rem rgba(30, 136, 229, 0.25); /* Focus shadow */
+        }
+        .alert-warning {
+            background-color: #ffeb3b; /* Yellow background for warning alert */
+            color: #000000; /* Black text for warning alert */
+        }
+        /* Styling for Select Element */
+        .form-select {
+            border-color: #0d47a1; /* Dark blue border */
+            color: #0d47a1; /* Dark blue text */
+            background-color: #ffffff; /* White background */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-select:focus {
+            border-color: #1e88e5; /* Darker blue border on focus */
+            box-shadow: 0 0 0 0.2rem rgba(30, 136, 229, 0.25); /* Focus shadow */
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/index}">
+            <img src="/shoes.png" alt="ShoeBooking Logo" class="logo">
+            ShoeBooking
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto justify-content-end"> <!-- Changed class to ms-auto for margin and added justify-content-end -->
+                <li class="nav-item">
+                    <span th:if="${user}" class="nav-link" th:text="'Welcome, ' + ${user.name} + ' ' + ${user.surname}"></span>
+                </li>
+                <li class="nav-item ms-auto"> <!-- Added ms-auto class here -->
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Main Content -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center">Make Booking</h1>
+
+            <!-- Flash Message Display -->
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${message}"></span>
+            </div>
+
+            <div th:if="${user}" class="card">
+                <div class="card-body">
+
+                    <form th:action="@{/make/booking}" method="post">
+                        <div class="form-group mb-3">
+                            <label for="shoeName" class="form-label">Shoe Name</label>
+                            <input type="text" id="shoeName" name="shoeName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="shoeSize" class="form-label">Shoe Size</label>
+                            <input type="number" id="shoeSize" name="shoeSize" class="form-control" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="shoeColour" class="form-label">Shoe Colour</label>
+                            <input type="text" id="shoeColour" name="shoeColour" class="form-control" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="paymentMethod" class="form-label">Payment Method</label>
+                            <select id="paymentMethod" name="paymentMethod" class="form-select">
+                                <optgroup label="Choose Payment Type">
+                                    <option value="Debit/Credit Card">Debit/Credit Card</option>
+                                    <option value="Cash">Cash</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Book</button>
+                    </form>
+                </div>
+            </div>
+
+            <div th:if="${user == null}" class="alert alert-warning" role="alert">
+                <span>You need to <a th:href="@{/login}">login</a> to make a booking.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS for dismissing alerts -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
